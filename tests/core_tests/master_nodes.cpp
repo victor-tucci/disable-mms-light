@@ -145,7 +145,7 @@ bool gen_master_nodes::generate(std::vector<test_event_entry> &events) const
 
   DO_CALLBACK(events, "check_registered");
 
-  for (auto i = 0u; i < master_nodes::staking_num_lock_blocks(cryptonote::FAKECHAIN); ++i) {
+  for (auto i = 0u; i < master_nodes::staking_num_lock_blocks(cryptonote::FAKECHAIN,network_version_9_master_nodes); ++i) {
     gen.create_block();
   }
 
@@ -189,7 +189,7 @@ bool gen_master_nodes::check_expired(cryptonote::core& c, size_t ev_index, const
 
   cryptonote::account_base alice = boost::get<cryptonote::account_base>(events[1]);
 
-  const auto stake_lock_time = master_nodes::staking_num_lock_blocks(cryptonote::FAKECHAIN);
+  const auto stake_lock_time = master_nodes::staking_num_lock_blocks(cryptonote::FAKECHAIN,0);
 
   std::vector<block> blocks;
   size_t count = 15 + (2 * CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW) + stake_lock_time;

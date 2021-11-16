@@ -1,7 +1,7 @@
 Beldex daemon internationalization
 ==================================
 
-The Beldex command line tools can be translated in various languages. If you wish to contribute and need help/support, contact the [Beldex Localization Workgroup on Taiga](https://taiga.getloki.org/project/erciccione-beldex-localization/) or come chat on `#beldex-translations` (Freenode/IRC, riot/matrix, MatterMost)
+The Beldex command line tools can be translated in various languages. If you wish to contribute and need help/support, contact the [Beldex Localization Workgroup on Taiga](https://taiga.getbeldex.org/project/erciccione-beldex-localization/) or come chat on `#beldex-translations` (Freenode/IRC, riot/matrix, MatterMost)
 
 In order to use the same translation workflow as the [Beldex GUI](https://github.com/Beldex-Coin/beldex-gui), they use Qt Linguist translation files.  However, to avoid the dependencies on Qt this normally implies, they use a custom loader to read those files at runtime.
 
@@ -15,7 +15,9 @@ You do not need anything from Qt in order to use the final translations.
 
 To update ts files after changing source code:
 
-    ./utils/translations/update-translations.sh
+```bash
+./utils/translations/update-translations.sh
+```
 
 To add a new language, eg Spanish (ISO code es):
 
@@ -27,7 +29,9 @@ To edit translations for Spanish:
 
 To build translations after modifying them:
 
-    ./utils/translations/build-translations.sh
+```bash
+./utils/translations/build-translations.sh
+```
 
 To test a translation:
 
@@ -39,6 +43,8 @@ Use the `tr(string)` function if possible. If the code is in a class, and this c
 
 If you're getting messages of the form:
 
-    Class 'cryptonote::simple_wallet' lacks Q_OBJECT macro
+```
+Class 'cryptonote::simple_wallet' lacks Q_OBJECT macro
+```
 
 all is fine, we don't actually need that here.

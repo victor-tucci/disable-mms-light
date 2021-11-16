@@ -37,6 +37,8 @@
 
 #include "blockchain_db/blockchain_db.h"
 
+namespace cryptonote { struct checkpoint_t; };
+
 class BaseTestDB: public cryptonote::BlockchainDB {
 public:
   BaseTestDB() {}
@@ -57,15 +59,26 @@ public:
   virtual std::vector<std::string> get_filenames() const override { return std::vector<std::string>(); }
   virtual bool remove_data_file(const std::string& folder) const override { return true; }
   virtual std::string get_db_name() const override { return std::string(); }
-  virtual bool lock() override { return true; }
+  virtual void lock() override { }
+  virtual bool try_lock() override { return true; }
   virtual void unlock() override { }
   virtual bool batch_start(uint64_t batch_num_blocks, uint64_t batch_bytes) override { return true; }
   virtual void batch_stop() override {}
   virtual void set_batch_transactions(bool) override {}
-  virtual void block_txn_start(bool readonly=false) override {}
-  virtual void block_txn_stop() override {}
-  virtual void block_txn_abort() override {}
+
+  virtual void block_wtxn_start() {}
+  virtual void block_wtxn_stop() {}
+  virtual void block_wtxn_abort() {}
+  virtual bool block_rtxn_start() const { return true; }
+  virtual void block_rtxn_stop() const {}
+  virtual void block_rtxn_abort() const {}
+
   virtual bool block_exists(const crypto::hash& h, uint64_t *height) const override { return false; }
+  virtual void update_block_checkpoint(cryptonote::checkpoint_t const &checkpoint) override {}
+  virtual bool get_block_checkpoint   (uint64_t height, cryptonote::checkpoint_t &checkpoint) const override { return false; }
+  virtual bool get_top_checkpoint     (cryptonote::checkpoint_t &checkpoint) const override { return false; }
+  virtual void remove_block_checkpoint(uint64_t height) override { }
+  std::vector<checkpoint_t> get_checkpoints_range(uint64_t start, uint64_t end, size_t num_desired_checkpoints = GET_ALL_CHECKPOINTS) const override { return {}; }
   virtual cryptonote::blobdata get_block_blob(const crypto::hash& h) const override { return cryptonote::blobdata(); }
   virtual uint64_t get_block_height(const crypto::hash& h) const override { return 0; }
   virtual cryptonote::block_header get_block_header(const crypto::hash& h) const override { return cryptonote::block_header(); }
@@ -96,7 +109,7 @@ public:
   virtual bool get_prunable_tx_hash(const crypto::hash& tx_hash, crypto::hash &prunable_hash) const override { return false; }
   virtual uint64_t get_tx_count() const override { return 0; }
   virtual std::vector<cryptonote::transaction> get_tx_list(const std::vector<crypto::hash>& hlist) const override { return std::vector<cryptonote::transaction>(); }
-  virtual uint64_t get_tx_block_height(const crypto::hash& h) const override { return 0; }
+  virtual std::vector<uint64_t> get_tx_block_heights(const std::vector<crypto::hash>& h) const override { return {h.size(), 0}; }
   virtual uint64_t get_num_outputs(const uint64_t& amount) const override { return 1; }
   virtual uint64_t get_indexing_base() const override { return 0; }
   virtual cryptonote::output_data_t get_output_key(const uint64_t& amount, const uint64_t& index, bool include_commitmemt) const override { return cryptonote::output_data_t(); }
@@ -127,20 +140,18 @@ public:
   virtual bool for_all_outputs(std::function<bool(uint64_t amount, const crypto::hash &tx_hash, uint64_t height, size_t tx_idx)> f) const override { return true; }
   virtual bool for_all_outputs(uint64_t amount, const std::function<bool(uint64_t height)> &f) const override { return true; }
 
-  virtual void set_hard_fork_version(uint64_t height, uint8_t version) override {}
-  virtual uint8_t get_hard_fork_version(uint64_t height) const override { return 0; }
   virtual void check_hard_fork_info() override {}
   virtual void drop_hard_fork_info() override {}
 
-  virtual std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> get_output_histogram(const std::vector<uint64_t> &amounts, bool unlocked, uint64_t recent_cutoff, uint64_t min_count) const override { return std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>>(); }
+  virtual std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> get_output_histogram(const std::vector<uint64_t> &amounts, bool unlocked, uint64_t recent_cutoff, uint64_t min_count,cryptonote::network_type nettype) const override { return std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>>(); }
   virtual bool get_output_distribution(uint64_t amount, uint64_t from_height, uint64_t to_height, std::vector<uint64_t> &distribution, uint64_t &base) const override { return false; }
   virtual bool is_read_only() const override { return false; }
   virtual uint64_t get_database_size() const override { return 0; }
 
-  virtual bool get_output_blacklist   (std::vector<uint64_t> &blacklist)       const override { return false; }
+  virtual void get_output_blacklist   (std::vector<uint64_t> &blacklist)       const override { }
   virtual void add_output_blacklist   (std::vector<uint64_t> const &blacklist)       override { }
-  virtual void set_master_node_data  (const std::string& data)                      override { }
-  virtual bool get_master_node_data  (std::string& data)                            override { return false; }
+  virtual void set_master_node_data  (const std::string& data, bool long_term)      override { }
+  virtual bool get_master_node_data  (std::string& data, bool long_term)            override { return false; }
   virtual void clear_master_node_data()                                             override { }
 
   virtual cryptonote::transaction get_pruned_tx(const crypto::hash& h) const override { return {}; };

@@ -1,6 +1,8 @@
 .DS_Store
 /doc
-/build
+/build*
+/compile_commands.json
+/.cache
 /tags
 log/
 
@@ -19,6 +21,8 @@ cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
+
+__pycache__
 
 external/miniupnpc/Makefile
 miniupnpcstrings.h
@@ -96,6 +100,9 @@ local.properties
 # PDT-specific
 .buildpath
 
+# Netbeans-specific
+nbproject
+
 # sbteclipse plugin
 .target
 
@@ -104,3 +111,5 @@ local.properties
 .idea/
 
 /testnet
+
+__pycache__/

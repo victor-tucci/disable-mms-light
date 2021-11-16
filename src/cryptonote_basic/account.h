@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -32,7 +32,7 @@
 
 #include "cryptonote_basic.h"
 #include "crypto/crypto.h"
-#include "serialization/keyvalue_serialization.h"
+#include "epee/serialization/keyvalue_serialization.h"
 
 namespace cryptonote
 {
@@ -54,8 +54,6 @@ namespace cryptonote
       const crypto::chacha_iv default_iv{{0, 0, 0, 0, 0, 0, 0, 0}};
       KV_SERIALIZE_VAL_POD_AS_BLOB_OPT(m_encryption_iv, default_iv)
     END_KV_SERIALIZE_MAP()
-
-    account_keys& operator=(account_keys const&) = default;
 
     void encrypt(const crypto::chacha_key &key);
     void decrypt(const crypto::chacha_key &key);
@@ -94,12 +92,10 @@ namespace cryptonote
     uint64_t get_createtime() const { return m_creation_timestamp; }
     void set_createtime(uint64_t val) { m_creation_timestamp = val; }
 
-    bool load(const std::string& file_path);
-    bool store(const std::string& file_path);
-
     void forget_spend_key();
     const std::vector<crypto::secret_key> &get_multisig_keys() const { return m_keys.m_multisig_keys; }
 
+    void generate_public_edkey();
     void encrypt_keys(const crypto::chacha_key &key) { m_keys.encrypt(key); }
     void decrypt_keys(const crypto::chacha_key &key) { m_keys.decrypt(key); }
     void encrypt_viewkey(const crypto::chacha_key &key) { m_keys.encrypt_viewkey(key); }

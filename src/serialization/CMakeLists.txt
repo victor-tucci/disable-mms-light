@@ -27,24 +27,39 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Nothing to do here: serialization code is completely header-only.
 set(serialization_sources
-  json_object.cpp)
-
-set(serialization_headers)
+ base.h
+   binary_archive.h
+   binary_utils.h
+   boost_std_variant.h
+   boost_std_optional.h
+   container.h
+   crypto.h
+   deque.h
+   list.h
+   pair.h
+   serialization.h
+   set.h
+   string.h
+   unordered_set.h
+   variant.h
+   vector.h)
 
 set(serialization_private_headers
-  json_object.h)
+json_archive.h
+json_utils.h)
 
-beldex_private_headers(serialization
-  ${serialization_private_headers})
-beldex_add_library(serialization
+add_library(serialization
   ${serialization_sources}
-  ${serialization_headers}
   ${serialization_private_headers})
+  
 target_link_libraries(serialization
   LINK_PRIVATE
+    cryptonote_basic
     cryptonote_core
     cryptonote_protocol
+    epee
     ${Boost_CHRONO_LIBRARY}
     ${Boost_REGEX_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
@@ -52,4 +67,3 @@ target_link_libraries(serialization
     ${EXTRA_LIBRARIES})
 add_dependencies(serialization
   version)
-

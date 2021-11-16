@@ -27,6 +27,7 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote developers
+#include "cryptonote_config.h"
 
 namespace cryptonote
 {
@@ -34,7 +35,7 @@ namespace cryptonote
 namespace rules
 {
 
-bool is_output_unlocked(uint64_t unlock_time, uint64_t height);
+bool is_output_unlocked(uint64_t unlock_time, uint64_t height,network_type nettype);
 
 } // namespace rules
 
